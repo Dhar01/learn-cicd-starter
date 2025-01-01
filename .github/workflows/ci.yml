@@ -16,10 +16,16 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.21.0"
+          go-version: "1.23.0"
 
       - name: Checking if the auth tests passes or not with code coverage
         run: go test -cover ./...
+
+      - name: Install gosec
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+      - name: Checking code security
+        run: gosec ./...
 
   style:
     name: Style
@@ -38,7 +44,10 @@ jobs:
         run: go install honnef.co/go/tools/cmd/staticcheck@latest
 
       - name: Styling codebase
-        run: test -z $(go fmt ./...)
+        run: go fmt ./...
+
+      - name: Install staticcheck for linting
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
 
       - name: Checking code functionality
         run: staticcheck ./...
