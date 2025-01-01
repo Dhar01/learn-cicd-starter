@@ -40,5 +40,9 @@ jobs:
       - name: Styling codebase
         run: test -z $(go fmt ./...)
 
+      - name: Install staticcheck for linting
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+
       - name: Checking code functionality
         run: staticcheck ./...
