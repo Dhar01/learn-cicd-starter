@@ -10,13 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
+    - name: Check out code
+      uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "stable"
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: "stable"
 
-      - name: Build the app
-        run: ./scripts/buildprod.sh
+    - name: Build the app
+      run: ./scripts/buildprod.sh
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+
+    - name: 'build docker image and push to artifacts'
+      run: gcloud builds submit --tag asia-south1-docker.pkg.dev/notely-notely/notely-ar-repo/notely:latest .
