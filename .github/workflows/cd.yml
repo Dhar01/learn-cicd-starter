@@ -34,3 +34,6 @@ jobs:
 
     - name: 'build docker image and push to artifacts'
       run: gcloud builds submit --tag asia-south1-docker.pkg.dev/notely-notely/notely-ar-repo/notely:latest .
+
+    - name: Deploy to Cloud Run
+      run: gcloud run deploy notely --image asia-south1-docker.pkg.dev/notely-notely/notely-ar-repo/notely:latest --region us-central1 --allow-unauthenticated --project notely-notely --max-instances=4
