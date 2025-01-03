@@ -21,6 +21,12 @@ jobs:
       with:
         go-version: "stable"
 
+    - name: install goose
+      run: go install github.com/pressly/goose/v3/cmd/goose@latest
+
+    - name: goose version
+      run: goose-version
+
     - name: Build the app
       run: ./scripts/buildprod.sh
 
@@ -37,6 +43,9 @@ jobs:
 
     - name: 'build docker image and push to artifacts'
       run: gcloud builds submit --tag asia-south1-docker.pkg.dev/notely-notely/notely-ar-repo/notely:latest .
+
+    - name: run migration
+      run: ./scripts/migrateup.sh
 
     - name: Deploy to Cloud Run
       run: gcloud run deploy notely --image asia-south1-docker.pkg.dev/notely-notely/notely-ar-repo/notely:latest --region us-central1 --allow-unauthenticated --project notely-notely --max-instances=4
